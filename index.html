@@ -8,9 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <style>
-        #pokedex {
-            
-        }
+        #pokedex {}
 
         .pokemon {
             margin: 1px solid black;
@@ -23,9 +21,14 @@
 
 <body class="bg-info">
     <div class="container">
+        <div class="row">
+            <div id="mostar-pokemon" class="col-6"> 
+            </div>
+        </div>
         <div id="pokedex" class="row">
         </div>
     </div>
+    .
 
 
     <!-- Js Bundle-->
@@ -33,12 +36,46 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+        integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+        crossorigin="anonymous"></script>
+
     <!-- Js Manual-->
     <script>
         $('document').ready(function () {
-            for (var i = 1; i <= 151; i++) {
-                $('#pokedex').append('<div class="col-2 d-block text-center my-2"><img class = "mx-auto bg-light border border-secondary rounded" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/' + i + '.png"><p>' + i + '</p></div>');
+            for (let i = 1; i <= 151; i++) {
+                $('#pokedex').append(`<div class="col-2 d-block text-center my-2"><img id="${i}" class = "mx-auto bg-light border border-secondary rounded" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${i}.png"><h5>${i}</h5></div>`);
             }
+
+            $('img').on('click', function () {
+                let pokeId = $(this).attr('id');
+                console.log(pokeId);
+                $.get(`https://pokeapi.co/api/v2/pokemon/${pokeId}/`, function (pokemon) {
+                    let nombre = pokemon.name;
+                    let altura = pokemon.height;
+                    let peso = pokemon.weight;
+                    let list = '<span><b>tipo:</b>';
+                    for (let t = 0; t < pokemon.types.length; t++) {
+                        list += ' &curren;' + pokemon.types[t].type.name + '<br>';
+                    }
+                        list += '</span>'
+                    $('#mostar-pokemon').html(
+                        `<div class="container">
+                            <div class="card" style="width: 18rem;">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${pokeId}.png"></img>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">${nombre}</h5>
+                                    ${list}
+                                    <span><b>Altura:</b> ${altura}</span>
+                                    <br>
+                                    <span><b>Peso:</b> ${peso}</span>
+                                </div>
+                            </div>
+                        </div>`
+            
+                    )
+                });
+            })
         });
     </script>
 </body>
